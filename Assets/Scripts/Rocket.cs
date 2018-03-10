@@ -7,6 +7,10 @@ public class Rocket : MonoBehaviour {
 
     Rigidbody rocketRigidbody;
     AudioSource thrustAudioSource;
+    [SerializeField]
+    float ThroatPower = 100f;
+    [SerializeField]
+    float RotationSpeed = 100f;
 	// Use this for initialization
 	void Start ()
     {
@@ -38,11 +42,15 @@ public class Rocket : MonoBehaviour {
 
     private void Thrust()
     {
-        if (Input.GetKey(KeyCode.Space) || Input.GetKey(KeyCode.UpArrow))//thrust the ship
+
+        float throatFps = ThroatPower * Time.deltaTime;
+        if (Input.GetKey(KeyCode.Space) || Input.GetKey(KeyCode.UpArrow)) //thrust the ship
         {
             //Console message
             print("Ship is thrustating.");
-            rocketRigidbody.AddRelativeForce(Vector3.up);
+            rocketRigidbody.AddRelativeForce(Vector3.up * throatFps);
+
+            #region Throat Sound
             if (!thrustAudioSource.isPlaying)
             {
                 thrustAudioSource.Play();
@@ -51,22 +59,25 @@ public class Rocket : MonoBehaviour {
         else
         {
             thrustAudioSource.Stop();
-        }
+        } 
+        #endregion
     }
     private void Rotate()
     {
 
         rocketRigidbody.freezeRotation = true;
 
+        float rotationFps = RotationSpeed * Time.deltaTime;
         if (Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.LeftArrow))
         {
-            transform.Rotate(Vector3.forward);
+            
+            transform.Rotate(Vector3.forward * rotationFps);
             //Console message
             print("Rotating left.");
         }
         else if (Input.GetKey(KeyCode.D) || Input.GetKey(KeyCode.RightArrow))
         {
-            transform.Rotate(-Vector3.forward);
+            transform.Rotate(-Vector3.forward * rotationFps);
             //Console message
             print("Rotating right.");
         }
