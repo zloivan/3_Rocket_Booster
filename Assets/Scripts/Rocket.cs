@@ -17,42 +17,26 @@ public class Rocket : MonoBehaviour {
 	// Update is called once per frame
 	void Update ()
     {
-        ProcessInput();
-	}
-
-    private void ProcessInput()
-    {
-        //My variant
-        //if (Input.GetKeyDown(KeyCode.UpArrow)|| Input.GetKeyDown(KeyCode.Space))
-        //{
-        //    thrustAudioSource.Play();
-        //}
-        //if (Input.GetKeyUp(KeyCode.Space) || Input.GetKeyUp(KeyCode.UpArrow))
-        //{
-        //    thrustAudioSource.Stop();
-        //}
-        ProcessRocketThrust();
-        ProcessRocketRotate();
-
+        Thrust();
+        Rotate();
     }
 
-    private void ProcessRocketRotate()
-    {
-        if (Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.LeftArrow))
-        {
-            transform.Rotate(Vector3.forward);
-            //Console message
-            print("Rotating left.");
-        }
-        else if (Input.GetKey(KeyCode.D) || Input.GetKey(KeyCode.RightArrow))
-        {
-            transform.Rotate(-Vector3.forward);
-            //Console message
-            print("Rotating right.");
-        }
-    }
+    //private void ProcessInput()
+    //{
+    //    //My variant
+    //    //if (Input.GetKeyDown(KeyCode.UpArrow)|| Input.GetKeyDown(KeyCode.Space))
+    //    //{
+    //    //    thrustAudioSource.Play();
+    //    //}
+    //    //if (Input.GetKeyUp(KeyCode.Space) || Input.GetKeyUp(KeyCode.UpArrow))
+    //    //{
+    //    //    thrustAudioSource.Stop();
+    //    //}
 
-    private void ProcessRocketThrust()
+
+    //}
+
+    private void Thrust()
     {
         if (Input.GetKey(KeyCode.Space) || Input.GetKey(KeyCode.UpArrow))//thrust the ship
         {
@@ -69,4 +53,26 @@ public class Rocket : MonoBehaviour {
             thrustAudioSource.Stop();
         }
     }
+    private void Rotate()
+    {
+
+        rocketRigidbody.freezeRotation = true;
+
+        if (Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.LeftArrow))
+        {
+            transform.Rotate(Vector3.forward);
+            //Console message
+            print("Rotating left.");
+        }
+        else if (Input.GetKey(KeyCode.D) || Input.GetKey(KeyCode.RightArrow))
+        {
+            transform.Rotate(-Vector3.forward);
+            //Console message
+            print("Rotating right.");
+        }
+
+        rocketRigidbody.freezeRotation = false;
+    }
+
+    
 }
