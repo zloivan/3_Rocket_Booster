@@ -6,10 +6,12 @@ using UnityEngine;
 public class Rocket : MonoBehaviour {
 
     Rigidbody rocketRigidbody;
+    AudioSource thrustAudioSource;
 	// Use this for initialization
 	void Start ()
     {
-        rocketRigidbody = GetComponent<Rigidbody>();	
+        rocketRigidbody = GetComponent<Rigidbody>();
+        thrustAudioSource = GetComponent<AudioSource>();
 	}
 	
 	// Update is called once per frame
@@ -20,20 +22,51 @@ public class Rocket : MonoBehaviour {
 
     private void ProcessInput()
     {
-        if (Input.GetKey(KeyCode.Space) || Input.GetKey(KeyCode.UpArrow))//thrust the ship
-        {
-            print("Ship is thrustating.");
-            rocketRigidbody.AddRelativeForce(Vector3.up);
-        }
+        //My variant
+        //if (Input.GetKeyDown(KeyCode.UpArrow)|| Input.GetKeyDown(KeyCode.Space))
+        //{
+        //    thrustAudioSource.Play();
+        //}
+        //if (Input.GetKeyUp(KeyCode.Space) || Input.GetKeyUp(KeyCode.UpArrow))
+        //{
+        //    thrustAudioSource.Stop();
+        //}
+        ProcessRocketThrust();
+        ProcessRocketRotate();
 
+    }
+
+    private void ProcessRocketRotate()
+    {
         if (Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.LeftArrow))
         {
+            transform.Rotate(Vector3.forward);
+            //Console message
             print("Rotating left.");
         }
         else if (Input.GetKey(KeyCode.D) || Input.GetKey(KeyCode.RightArrow))
         {
+            transform.Rotate(-Vector3.forward);
+            //Console message
             print("Rotating right.");
         }
-        
+    }
+
+    private void ProcessRocketThrust()
+    {
+        if (Input.GetKey(KeyCode.Space) || Input.GetKey(KeyCode.UpArrow))//thrust the ship
+        {
+            //Console message
+            print("Ship is thrustating.");
+            rocketRigidbody.AddRelativeForce(Vector3.up);
+            if (!thrustAudioSource.isPlaying)
+            {
+                thrustAudioSource.Play();
+            }
+        }
+        else
+        {
+            thrustAudioSource.Stop();
+        }
     }
 }
