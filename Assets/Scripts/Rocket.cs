@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class Rocket : MonoBehaviour {
 
@@ -11,8 +12,12 @@ public class Rocket : MonoBehaviour {
     float ThroatPower = 100f;
     [SerializeField]
     float RotationSpeed = 100f;
-	// Use this for initialization
-	void Start ()
+    [SerializeField]
+    float TimeLoadingNextLevel = 1f;
+    [SerializeField]
+    float DeathTimer = 1f;
+    // Use this for initialization
+    void Start ()
     {
         rocketRigidbody = GetComponent<Rigidbody>();
         thrustAudioSource = GetComponent<AudioSource>();
@@ -50,13 +55,27 @@ public class Rocket : MonoBehaviour {
             case "Friendly": print("We just hited a FRIENDLY [ " + collision.collider.name+" ]");
                 break;
 
-            
+            case "Finish":
+                Invoke("LoadNextLevel",TimeLoadingNextLevel);
+                break;
             default:
-                print("We just hited a UNFRIENDLY [ " + collision.collider.name + " ]");
+                Invoke("Death", DeathTimer);
                 break;
         }
 
     }
+
+    private void Death()
+    {
+        SceneManager.LoadScene(0);
+    }
+
+    private void LoadNextLevel()
+    {
+        
+        SceneManager.LoadScene(1);
+    }
+
     private void OnTriggerEnter(Collider other)
     {
         print("Got some FUEL");
