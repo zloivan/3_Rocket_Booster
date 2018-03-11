@@ -30,6 +30,7 @@ public class Rocket : MonoBehaviour {
     [SerializeField] ParticleSystem ExplosionParticle;
     [SerializeField] ParticleSystem SuccesParticle;
     [SerializeField] ParticleSystem ThrustParticle;
+    private bool collisionsAreDesabled = false;
     #endregion
 
 
@@ -44,15 +45,28 @@ public class Rocket : MonoBehaviour {
     {
         if (state==State.Alive)
         {
-
             RespoundThrust();
             RespoundRotate();
         }
+        ReactOnDebugInput();
     }
-    
+
+    private void ReactOnDebugInput()
+    {
+        if (Input.GetKeyDown(KeyCode.C))
+        {
+            collisionsAreDesabled = !collisionsAreDesabled;
+        }
+        else if (Input.GetKeyDown(KeyCode.L))
+        {
+            LoadNextLevel();
+        }
+        
+    }
+
     private void OnCollisionEnter(Collision collision)
     {
-        if (state!=State.Alive)
+        if (state!=State.Alive || collisionsAreDesabled)
         {
             return;
         }
@@ -98,8 +112,17 @@ public class Rocket : MonoBehaviour {
 
     private void LoadNextLevel()
     {
+        int currentSceneIndex = SceneManager.GetActiveScene().buildIndex;
+        if (SceneManager.sceneCountInBuildSettings > currentSceneIndex+1)
+        {
+            SceneManager.LoadScene(currentSceneIndex + 1);
+        }
+        else
+        {
+            SceneManager.LoadScene(0);
+        }
+
         
-        SceneManager.LoadScene(1);
     }
 
     private void OnTriggerEnter(Collider other)
