@@ -40,6 +40,27 @@ public class Rocket : MonoBehaviour {
 
     //}
 
+
+    private void OnCollisionEnter(Collision collision)
+    {
+        
+
+        switch (collision.gameObject.tag)
+        {
+            case "Friendly": print("We just hited a FRIENDLY [ " + collision.collider.name+" ]");
+                break;
+
+            
+            default:
+                print("We just hited a UNFRIENDLY [ " + collision.collider.name + " ]");
+                break;
+        }
+
+    }
+    private void OnTriggerEnter(Collider other)
+    {
+        print("Got some FUEL");
+    }
     private void Thrust()
     {
 
@@ -47,7 +68,7 @@ public class Rocket : MonoBehaviour {
         if (Input.GetKey(KeyCode.Space) || Input.GetKey(KeyCode.UpArrow)) //thrust the ship
         {
             //Console message
-            print("Ship is thrustating.");
+            //print("Ship is thrustating.");
             rocketRigidbody.AddRelativeForce(Vector3.up * throatFps);
 
             #region Throat Sound
@@ -73,13 +94,13 @@ public class Rocket : MonoBehaviour {
             
             transform.Rotate(Vector3.forward * rotationFps);
             //Console message
-            print("Rotating left.");
+            //print("Rotating left.");
         }
         else if (Input.GetKey(KeyCode.D) || Input.GetKey(KeyCode.RightArrow))
         {
             transform.Rotate(-Vector3.forward * rotationFps);
             //Console message
-            print("Rotating right.");
+            //print("Rotating right.");
         }
 
         rocketRigidbody.freezeRotation = false;
