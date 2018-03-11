@@ -6,6 +6,8 @@ using UnityEngine.SceneManagement;
 
 public class Rocket : MonoBehaviour {
 
+    enum State {Alive,Dead,Trancequent }
+    State state = State.Alive;
     Rigidbody rocketRigidbody;
     AudioSource thrustAudioSource;
     [SerializeField]
@@ -26,8 +28,11 @@ public class Rocket : MonoBehaviour {
 	// Update is called once per frame
 	void Update ()
     {
-        Thrust();
-        Rotate();
+        
+            Thrust();
+            Rotate();
+        
+        
     }
 
     //private void ProcessInput()
@@ -59,6 +64,7 @@ public class Rocket : MonoBehaviour {
                 Invoke("LoadNextLevel",TimeLoadingNextLevel);
                 break;
             default:
+                state = State.Dead;
                 Invoke("Death", DeathTimer);
                 break;
         }
@@ -67,6 +73,7 @@ public class Rocket : MonoBehaviour {
 
     private void Death()
     {
+        
         SceneManager.LoadScene(0);
     }
 
@@ -84,7 +91,7 @@ public class Rocket : MonoBehaviour {
     {
 
         float throatFps = ThroatPower * Time.deltaTime;
-        if (Input.GetKey(KeyCode.Space) || Input.GetKey(KeyCode.UpArrow)) //thrust the ship
+        if ((Input.GetKey(KeyCode.Space) || Input.GetKey(KeyCode.UpArrow)) && state==State.Alive) //thrust the ship
         {
             //Console message
             //print("Ship is thrustating.");
@@ -108,14 +115,14 @@ public class Rocket : MonoBehaviour {
         rocketRigidbody.freezeRotation = true;
 
         float rotationFps = RotationSpeed * Time.deltaTime;
-        if (Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.LeftArrow))
+        if ( (Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.LeftArrow)) && state==State.Alive)
         {
             
             transform.Rotate(Vector3.forward * rotationFps);
             //Console message
             //print("Rotating left.");
         }
-        else if (Input.GetKey(KeyCode.D) || Input.GetKey(KeyCode.RightArrow))
+        else if ((Input.GetKey(KeyCode.D) || Input.GetKey(KeyCode.RightArrow)) && state == State.Alive)
         {
             transform.Rotate(-Vector3.forward * rotationFps);
             //Console message
