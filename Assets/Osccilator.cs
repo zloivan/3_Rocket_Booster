@@ -26,6 +26,11 @@ public class Osccilator : MonoBehaviour {
 	// Update is called once per frame
 	void Update ()
     {
+        if (period < Mathf.Epsilon)
+        {
+            return;
+        }
+
         float cicles = Time.time / period; //Grows constantly from 0
         Vector3 offset = MovingPosition * MovingFactor;
 
