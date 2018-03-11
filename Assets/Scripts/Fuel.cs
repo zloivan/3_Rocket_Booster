@@ -5,15 +5,20 @@ using UnityEngine;
 
 public class Fuel : MonoBehaviour {
 
+    //TODO fix the sound of picking fuel.
     bool getBigger = true;
     public float scaleOfSize=1.5f;
     Vector3 initialState;
     Vector3 lastState;
-    Collider spherColider;
+    AudioSource soundSource;
+    [SerializeField] AudioClip pickingFuelSound;
+    //Collider spherColider;
     // Use this for initialization
 	void Start ()
     {
-        spherColider = GetComponent<Collider>();
+        soundSource = GetComponent<AudioSource>();
+
+        //spherColider = GetComponent<Collider>();
         initialState = transform.localScale;
         lastState = transform.localScale * scaleOfSize;
         ChangingScale();
@@ -31,6 +36,8 @@ public class Fuel : MonoBehaviour {
     }
     private void OnTriggerEnter(Collider other)
     {
+        soundSource.Stop();
+        soundSource.PlayOneShot(pickingFuelSound);
         Destroy(gameObject);
     }
     private void Rotate()

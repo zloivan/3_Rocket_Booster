@@ -6,10 +6,14 @@ using UnityEngine.SceneManagement;
 
 public class Rocket : MonoBehaviour {
 
-    enum State {Alive,Dead,Trancequent }
+    #region Private Fields
+    enum State { Alive, Dead, Trancequent }
     State state = State.Alive;
     Rigidbody rocketRigidbody;
-    AudioSource thrustAudioSource;
+    AudioSource audioSource;
+    #endregion
+
+    #region Public Fields
     [SerializeField]
     float ThroatPower = 100f;
     [SerializeField]
@@ -18,60 +22,68 @@ public class Rocket : MonoBehaviour {
     float TimeLoadingNextLevel = 1f;
     [SerializeField]
     float DeathTimer = 1f;
-    // Use this for initialization
+
+    public AudioClip DeathSound;
+    public AudioClip FinishSound;
+    public AudioClip ThrustSound; 
+    #endregion
+    
+    
     void Start ()
     {
         rocketRigidbody = GetComponent<Rigidbody>();
-        thrustAudioSource = GetComponent<AudioSource>();
+        audioSource = GetComponent<AudioSource>();
 	}
 	
-	// Update is called once per frame
+	
 	void Update ()
     {
-        
-            Thrust();
-            Rotate();
-        
-        
+        if (state==State.Alive)
+        {
+
+            RespoundThrust();
+            RespoundRotate();
+        }
     }
-
-    //private void ProcessInput()
-    //{
-    //    //My variant
-    //    //if (Input.GetKeyDown(KeyCode.UpArrow)|| Input.GetKeyDown(KeyCode.Space))
-    //    //{
-    //    //    thrustAudioSource.Play();
-    //    //}
-    //    //if (Input.GetKeyUp(KeyCode.Space) || Input.GetKeyUp(KeyCode.UpArrow))
-    //    //{
-    //    //    thrustAudioSource.Stop();
-    //    //}
-
-
-    //}
-
-
+    
     private void OnCollisionEnter(Collision collision)
     {
-        
-
+        if (state!=State.Alive)
+        {
+            return;
+        }
         switch (collision.gameObject.tag)
         {
-            case "Friendly": print("We just hited a FRIENDLY [ " + collision.collider.name+" ]");
+            case "Friendly":
+                print("We just hited an FRIENDLY [ " + collision.collider.name+" ]");
                 break;
-
             case "Finish":
-                Invoke("LoadNextLevel",TimeLoadingNextLevel);
+                StartSuccessSequence();
                 break;
             default:
-                state = State.Dead;
-                Invoke("Death", DeathTimer);
+                StartDeathSequence();
                 break;
         }
-
     }
 
-    private void Death()
+    private void StartSuccessSequence()
+    {
+        audioSource.Stop();
+        audioSource.PlayOneShot(FinishSound);
+        state = State.Trancequent;
+        Invoke("LoadNextLevel", TimeLoadingNextLevel);
+    }
+
+    private void StartDeathSequence()
+    {
+        
+        audioSource.Stop();
+        audioSource.PlayOneShot(DeathSound);
+        state = State.Dead;
+        Invoke("RestartGame", DeathTimer);
+    }
+
+    private void RestartGame()
     {
         
         SceneManager.LoadScene(0);
@@ -86,50 +98,51 @@ public class Rocket : MonoBehaviour {
     private void OnTriggerEnter(Collider other)
     {
         print("Got some FUEL");
+
     }
-    private void Thrust()
+    private void RespoundThrust()
     {
 
-        float throatFps = ThroatPower * Time.deltaTime;
-        if ((Input.GetKey(KeyCode.Space) || Input.GetKey(KeyCode.UpArrow)) && state==State.Alive) //thrust the ship
-        {
-            //Console message
-            //print("Ship is thrustating.");
-            rocketRigidbody.AddRelativeForce(Vector3.up * throatFps);
+        float thrustPerFPS = ThroatPower * Time.deltaTime;
 
-            #region Throat Sound
-            if (!thrustAudioSource.isPlaying)
-            {
-                thrustAudioSource.Play();
-            }
+        if (Input.GetKey(KeyCode.Space) || Input.GetKey(KeyCode.UpArrow)) //thrust the ship
+        {
+            ApplyThrust(thrustPerFPS);
         }
         else
         {
-            thrustAudioSource.Stop();
+            audioSource.Stop();
         } 
-        #endregion
+        
     }
-    private void Rotate()
+
+    private void ApplyThrust(float throatFps)
+    {
+        rocketRigidbody.AddRelativeForce(Vector3.up * throatFps);
+
+
+        if (!audioSource.isPlaying)
+        {
+            audioSource.PlayOneShot(ThrustSound);
+        }
+    }
+
+    private void RespoundRotate()
     {
 
-        rocketRigidbody.freezeRotation = true;
+        rocketRigidbody.freezeRotation = true;//Freeze rocket when rotating
 
         float rotationFps = RotationSpeed * Time.deltaTime;
-        if ( (Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.LeftArrow)) && state==State.Alive)
+        if ( Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.LeftArrow))
         {
-            
             transform.Rotate(Vector3.forward * rotationFps);
-            //Console message
-            //print("Rotating left.");
         }
-        else if ((Input.GetKey(KeyCode.D) || Input.GetKey(KeyCode.RightArrow)) && state == State.Alive)
+        else if (Input.GetKey(KeyCode.D) || Input.GetKey(KeyCode.RightArrow))
         {
             transform.Rotate(-Vector3.forward * rotationFps);
-            //Console message
-            //print("Rotating right.");
         }
-
-        rocketRigidbody.freezeRotation = false;
+        
+        rocketRigidbody.freezeRotation = false; //Unfreeze rocket when stop rotating.
     }
 
     
