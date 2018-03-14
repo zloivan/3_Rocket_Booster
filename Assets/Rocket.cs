@@ -22,7 +22,7 @@ public class Rocket : MonoBehaviour {
     float TimeLoadingNextLevel = 1f;
     [SerializeField]
     float DeathTimer = 1f;
-
+    [SerializeField]static int LifesLeft = 3;
     [SerializeField] AudioClip DeathSound;
     [SerializeField] AudioClip FinishSound;
     [SerializeField] AudioClip ThrustSound;
@@ -96,6 +96,7 @@ public class Rocket : MonoBehaviour {
 
     private void StartDeathSequence()
     {
+        LifesLeft--;
         ThrustParticle.Stop();
         ExplosionParticle.Play();
         audioSource.Stop();
@@ -106,8 +107,15 @@ public class Rocket : MonoBehaviour {
 
     private void RestartGame()
     {
+        if (LifesLeft == 0)
+        {
+            SceneManager.LoadScene(0);
+        }
+        else
+        {
+            SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+        }
         
-        SceneManager.LoadScene(0);
     }
 
     private void LoadNextLevel()

@@ -36,13 +36,13 @@ Transform:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1791992153839102}
-  m_LocalRotation: {x: -0.06446428, y: -0.0029922533, z: 0.0001933834, w: -0.9979155}
-  m_LocalPosition: {x: 2.86726, y: 27.315933, z: -72.82988}
+  m_LocalRotation: {x: 0.06441291, y: 0.03917812, z: -0.0025307876, w: 0.9971508}
+  m_LocalPosition: {x: -10.24, y: 27.315933, z: -72.82988}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 7.27, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 7.392, y: 4.5, z: 0}
 --- !u!20 &20192379041289096
 Camera:
   m_ObjectHideFlags: 1
@@ -61,7 +61,7 @@ Camera:
     height: 1
   near clip plane: 0.3
   far clip plane: 1000
-  field of view: 59.3
+  field of view: 61
   orthographic: 0
   orthographic size: 5
   m_Depth: -1
@@ -74,11 +74,11 @@ Camera:
   m_TargetEye: 3
   m_HDR: 1
   m_AllowMSAA: 1
+  m_AllowDynamicResolution: 0
   m_ForceIntoRT: 0
   m_OcclusionCulling: 1
   m_StereoConvergence: 10
   m_StereoSeparation: 0.022
-  m_StereoMirrorMode: 0
 --- !u!81 &81488017559735294
 AudioListener:
   m_ObjectHideFlags: 1
